@@ -36,6 +36,21 @@ namespace Assigment.Net.Advemced2
             Console.WriteLine();
         }
 
+        public static void PrintReport(List<Product> products)
+        {
+            List<Product> result = new List<Product>();
+            Console.WriteLine("Short Report: ");
+            foreach (var p in products)
+            {
+                Console.WriteLine($"{p.Name} - {p.Price}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Detailed Report: ");
+            foreach (var p in products)
+            {
+                Console.WriteLine($"[{p.Category}] {p.Name} | Price: {p.Price} | Stock: {p.Stock}");
+            }
+        }
         static void Main()
         {
             List<Product> catalog = new()
@@ -64,25 +79,33 @@ namespace Assigment.Net.Advemced2
             //var cheapClothing = SearchProducts(catalog, p => p.Category == "Clothing" && p.Price < 100);
             //PrintProducts("Clothing under $100:", cheapClothing);
 
-            PrintReport(catalog);
+            //PrintReport(catalog);
 
+            Console.WriteLine("Summary List: ");
+            var summary = TransformProducts(catalog, p => $"{p.Name} - ${p.Price}");
+            foreach (var p in summary)
+            {
+                Console.WriteLine(p);
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Price Label: ");
+            var Label = TransformProducts(catalog, p => p.Price > 100? $"{p.Name}: Expensive" :$"{p.Name}: Affordable" );
+            foreach (var l in Label)
+            {
+                Console.WriteLine(l);
+            }
 
         }
-
-        public static void PrintReport(List<Product> products)
+        static List<string> TransformProducts(List<Product> products, Func<Product, string> factory)
         {
-            List<Product> result = new List<Product>();
-            Console.WriteLine("Short Report: ");
+            List<string> result = new List<string>();
             foreach (var p in products)
             {
-                Console.WriteLine($"{p.Name} - {p.Price}");
+                result.Add(factory(p));
             }
-            Console.WriteLine();
-            Console.WriteLine("Detailed Report: ");
-            foreach (var p in products)
-            {
-                Console.WriteLine($"[{p.Category}] {p.Name} | Price: {p.Price} | Stock: {p.Stock}");
-            }
+            return result;
         }
     }
 }
