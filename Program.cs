@@ -51,6 +51,15 @@ namespace Assigment.Net.Advemced2
                 Console.WriteLine($"[{p.Category}] {p.Name} | Price: {p.Price} | Stock: {p.Stock}");
             }
         }
+        static List<string> TransformProducts(List<Product> products, Func<Product, string> factory)
+        {
+            List<string> result = new List<string>();
+            foreach (var p in products)
+            {
+                result.Add(factory(p));
+            }
+            return result;
+        }
         static void Main()
         {
             List<Product> catalog = new()
@@ -81,29 +90,39 @@ namespace Assigment.Net.Advemced2
 
             //PrintReport(catalog);
 
-            Console.WriteLine("Summary List: ");
-            var summary = TransformProducts(catalog, p => $"{p.Name} - ${p.Price}");
-            foreach (var p in summary)
+            //Console.WriteLine("Summary List: ");
+            //var summary = TransformProducts(catalog, p => $"{p.Name} - ${p.Price}");
+            //foreach (var p in summary)
+            //{
+            //    Console.WriteLine(p);
+            //}
+
+            //Console.WriteLine();
+
+            //Console.WriteLine("Price Label: ");
+            //var Label = TransformProducts(catalog, p => p.Price > 100? $"{p.Name}: Expensive" :$"{p.Name}: Affordable" );
+            //foreach (var l in Label)
+            //{
+            //    Console.WriteLine(l);
+            //}
+
+            
+            var lowStock = FilterProducts(catalog, p => p.Stock < 20);
+            foreach(var p in lowStock)
             {
-                Console.WriteLine(p);
+                Console.WriteLine($"[LOW STOCK] {p.Name}: only {p.Stock} left!");
             }
-
-            Console.WriteLine();
-
-            Console.WriteLine("Price Label: ");
-            var Label = TransformProducts(catalog, p => p.Price > 100? $"{p.Name}: Expensive" :$"{p.Name}: Affordable" );
-            foreach (var l in Label)
-            {
-                Console.WriteLine(l);
-            }
-
         }
-        static List<string> TransformProducts(List<Product> products, Func<Product, string> factory)
+
+        static List<Product> FilterProducts(List<Product> products, Predicate<Product> predicate)
         {
-            List<string> result = new List<string>();
+            List<Product> result = new List<Product>();
             foreach (var p in products)
             {
-                result.Add(factory(p));
+                if (predicate(p))
+                {
+                    result.Add(p);
+                }
             }
             return result;
         }
